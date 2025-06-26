@@ -15,9 +15,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 // do I need async ({ params } : { params: { slug: string }}) >
 export const getStaticProps: GetStaticProps<BlogPostProps> = async ({ params }) => {
-	const slug = params?.slug as string 
-	// http://localhost:5000/posts?slug=weekend-with-david
-  const post = await fetch(`http://localhost:5000/posts?slug=${slug}`).then((res) => res.json());
+  const slug = params?.slug as string;
+  // http://localhost:5000/posts?slug=weekend-with-david json-server query
+
+  const res = await fetch(`http://localhost:5000/posts?slug=${slug}`).then((res) => res.json());
+  const post = await res[0];
   return {
     props: { post },
     revalidate: 60,
