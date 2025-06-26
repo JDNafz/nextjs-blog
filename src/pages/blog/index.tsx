@@ -2,25 +2,12 @@
 // import { getPosts } from '@/lib/posts'
 // import { Post } from '@/ui/post'
 
+import Article from "@/components/Article";
 import Link from "next/link";
+import { posts } from "./static-exports";
 
-export default async function BlogPage() {
+export default function BlogPage() {
   // const posts = await getPosts()
-
-  const posts = [
-    {
-      id: 1,
-      slug: "first-post",
-      title: "My First Blog Post",
-      body: "This is a blog post",
-    },
-    {
-      id: 2,
-      slug: "second-post",
-      title: "Another Blog Post",
-      body: "This is a different Blog POSTTTTT",
-    },
-  ];
 
   return (
     <>
@@ -29,7 +16,9 @@ export default async function BlogPage() {
         <h1> This is the Blog Page </h1>
         <ul>
           {posts.map((post) => (
-						<Article key={post.id} post={post} />
+						<Link key={post.id} href={`/blog/${post.slug}`}>
+              <h3>{post.title}</h3>
+            </Link>
           ))}
           <li>
             <Link href={`/blog/manual-slug`}>
