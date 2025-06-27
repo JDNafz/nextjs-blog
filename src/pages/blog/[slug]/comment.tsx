@@ -1,6 +1,6 @@
+import { useUser } from "@/context/UserProvider";
 import { BlogComment } from "@/lib/interfaces/Comment";
 import React, { useEffect, useState } from "react";
-import { ReactFormState } from "react-dom/client";
 
 interface CommentProps {
   slug: string;
@@ -9,7 +9,7 @@ interface CommentProps {
 const Comment: React.FC<CommentProps> = ({ slug }) => {
   const [comments, setComments] = useState<BlogComment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
-  //TODO: const { loggedInUser } = useUser(); // is that right?
+  const { loggedInUser } = useUser();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -25,14 +25,13 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const commentSubmission: BlogComment = {
-      id: `${comments.length + 1}`,
+    const commentSubmission: Omit<BlogComment, "id"> = {
       slug: slug,
-      userId: "1", //TODO use context get logged in user
+      userId: loggedInUser ? loggedInUser.id : "anonymous",
+      author: loggedInUser ? loggedInUser.name : "anonymous",
       content: newComment,
       timestamp: new Date().toISOString(),
     };
-    setComments((prev) => [...prev, commentSubmission]);
     const res = await fetch(`http://localhost:5000/comments`, {
       method: "POST",
       body: JSON.stringify(commentSubmission),
@@ -40,6 +39,8 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
     if (!res.ok) {
       throw new Error(`Error POST comment`);
     }
+    const resComment: BlogComment = await res.json();
+    setComments((prev) => [...prev, resComment]);
   };
 
   return (
@@ -55,7 +56,7 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
         comments.map((comment) => {
           return (
             <li key={comment.id} className="comment">
-              {comment.userId}: {comment.content}
+              {comment.author ? comment.author : "Anonymous"}: {comment.content}
             </li>
             // comment.timestamp
           );

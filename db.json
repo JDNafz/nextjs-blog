@@ -21,7 +21,7 @@
   ],
   "users": [
     {
-      "id": "1",
+      "id": "alibby",
       "name": "Alex",
       "email": "alexrules@gmail.com",
       "password": "alex"
@@ -47,67 +47,46 @@
   ],
   "comments": [
     {
-      "id": "c1",
+      "id": "1",
       "slug": "weekend-with-david",
       "content": "David offering pistachio to Alex?! Betrayal never tasted so sweet. Justice for the tote bag!",
       "timestamp": "2025-06-26T10:32:00Z",
       "userId": "3"
     },
     {
-      "id": "4",
+      "id": "2",
       "slug": "weekend-with-david",
       "content": "The selfie on YOUR phone? That’s villain origin story material.",
       "timestamp": "2025-06-26T10:33:00Z",
       "userId": "ae34"
     },
     {
-      "id": "1",
+      "id": "3",
       "slug": "the-espresso-incident",
       "content": "Julian saying you smell like citrus and secrets? That line belongs in a romance novel.",
       "timestamp": "2025-06-26T10:34:00Z",
       "userId": "ae34"
     },
     {
-      "id": "2",
+      "id": "4",
       "slug": "the-espresso-incident",
       "content": "Renata showing up mid-spark? Caffeine wasn’t the only thing brewing at Café Flor.",
       "timestamp": "2025-06-26T10:35:00Z",
       "userId": "ae34"
     },
     {
-      "id": "1",
+      "id": "5",
       "slug": "texts-from-anthony",
       "content": "Ellipses at 2 a.m.? That’s not texting, that’s emotional terrorism.",
       "timestamp": "2025-06-26T10:36:00Z",
       "userId": "ae34"
     },
     {
-      "id": "2",
+      "id": "6",
       "slug": "texts-from-anthony",
       "content": "That scarf flip? Cinematic. Anthony could never compete with that kind of exit.",
       "timestamp": "2025-06-26T10:37:00Z",
       "userId": "ae34"
-    },
-    {
-      "id": "3",
-      "slug": "the-espresso-incident",
-      "content": "I feel this.",
-      "timestamp": "2025-06-27T03:50:26.939Z",
-      "userId": "ae34"
-    },
-    {
-      "id": "4",
-      "slug": "the-espresso-incident",
-      "content": "hi",
-      "timestamp": "2025-06-27T03:53:01.884Z",
-      "userId": "ae34"
-    },
-    {
-      "id": "5",
-      "slug": "the-espresso-incident",
-      "userId": "1",
-      "content": "asdfasdf",
-      "timestamp": "2025-06-27T03:59:58.286Z"
     }
   ]
 }
