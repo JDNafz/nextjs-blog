@@ -2,6 +2,7 @@ import { useUser } from "@/context/UserProvider";
 import { User } from "@/lib/interfaces/User";
 import { useState } from "react";
 import myCSS from "../styles/Home.module.css";
+import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
   const { loggedInUser, setLoggedInUser } = useUser();
@@ -11,6 +12,7 @@ const Login: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [isReg, setIsReg] = useState<boolean>(false);
   const [blankError, setBlankError] = useState<boolean>(false);
+  const router = useRouter();
 
   const logout = () => {
     setLoggedInUser(null);
@@ -18,7 +20,7 @@ const Login: React.FC = () => {
 
   if (loggedInUser) {
     return (
-      <div className="login">
+      <div className="loggedIn">
         <div>{`Logged in as ${loggedInUser.name}`}</div>
         <button type="button" onClick={logout}>
           Logout
@@ -48,7 +50,8 @@ const Login: React.FC = () => {
       try {
         const res1 = await fetch(`http://localhost:5000/users/?email=${email}`);
         const foundUser = await res1.json();
-        if (foundUser) {
+        if (foundUser.length) {
+          console.log("FOUND:", foundUser);
           throw new Error("a user with this email already exists");
         }
         const newUser: Omit<User, "id"> = {
@@ -63,6 +66,7 @@ const Login: React.FC = () => {
         const registeredUser = await res.json();
         setLoggedInUser(registeredUser);
         console.log(`${registeredUser} has been registered and logged in.`);
+        router.push("/blog");
       } catch (err) {
         console.log("registration error:", err);
       }
@@ -70,16 +74,20 @@ const Login: React.FC = () => {
       //login:
       try {
         const res = await fetch(`http://localhost:5000/users/?email=${email}`);
-        const foundUser = await res.json();
+        const resArray = await res.json();
+        const foundUser = resArray[0];
         if (!foundUser) {
           throw new Error("No user found with that email");
         }
         if (foundUser.password === password) {
           setLoggedInUser(foundUser);
-          console.log(`${foundUser} has been logged in.`);
+          console.log(`${foundUser[0]} has been logged in.`);
+          // router.push("/blog");
+        } else {
+          throw new Error("Incorrect username and/or password");
         }
       } catch (err) {
-        throw new Error(`Login Error: ${err}`)
+        throw new Error(`Login Error: ${err}`);
       }
     }
   }
@@ -141,7 +149,7 @@ const Login: React.FC = () => {
           ></input>
           <div>
             <button className="btn" type="submit">
-               {isReg ? "Register" : "Login"}
+              {isReg ? "Register" : "Login"}
             </button>
           </div>
           <button className="toggleIsReg" type="button" onClick={toggleReg}>

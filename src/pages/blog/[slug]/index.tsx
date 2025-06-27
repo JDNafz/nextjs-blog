@@ -1,6 +1,7 @@
 import { Post } from "@/lib/interfaces/PostInterface";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Comment from "./comment";
+import Link from "next/link";
 
 interface BlogPostProps {
   post: Post;
@@ -30,8 +31,8 @@ export const getStaticProps: GetStaticProps<BlogPostProps> = async ({ params }) 
 const BlogPost = ({ post }: BlogPostProps) => {
   return (
     <div>
-      <h1>Slug Page</h1>
-      <h3>{post.title}</h3>
+      <h2>{post.title}</h2>
+      <Link href={"/blog"}>Back to Blog</Link>
       <p>{post.body}</p>
       <ul className="comments-list">
         <Comment slug={post.slug} />

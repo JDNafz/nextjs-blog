@@ -20,6 +20,12 @@
     }
   ],
   "users": [
+    {
+      "id": "8c6d",
+      "email": "nafziger10@gmail.com",
+      "password": "jdnaf",
+      "name": "JD"
+    }
   ],
   "comments": [
     {
@@ -63,6 +69,22 @@
       "content": "That scarf flip? Cinematic. Anthony could never compete with that kind of exit.",
       "timestamp": "2025-06-26T10:37:00Z",
       "userId": "ae34"
+    },
+    {
+      "id": "bdda",
+      "slug": "texts-from-anthony",
+      "userId": "anonymous",
+      "author": "anonymous",
+      "content": "Hiii",
+      "timestamp": "2025-06-27T05:52:04.247Z"
+    },
+    {
+      "id": "fa08",
+      "slug": "weekend-with-david",
+      "userId": "8c6d",
+      "author": "JD",
+      "content": "wassup",
+      "timestamp": "2025-06-27T06:11:39.955Z"
     }
   ]
 }

@@ -47,7 +47,15 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
     <div>
       <h2>Comments</h2>
       <form onSubmit={handleSubmit}>
-        <textarea rows={4} cols={60} onChange={(e) => setNewComment(e.target.value)}></textarea>
+        {loggedInUser && `Logged in as ${loggedInUser?.name}`}
+
+        <textarea
+          disabled={ loggedInUser ? false: true}
+					placeholder={ loggedInUser ? "" : "Please login to comment."}
+          rows={4}
+          cols={60}
+          onChange={(e) => setNewComment(e.target.value)}
+        ></textarea>
         <button>Submit</button>
       </form>
       {comments.length === 0 ? (
