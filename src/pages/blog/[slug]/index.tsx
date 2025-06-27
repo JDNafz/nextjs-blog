@@ -1,5 +1,6 @@
 import { Post } from "@/lib/interfaces/PostInterface";
 import { GetStaticPaths, GetStaticProps } from "next";
+import Comment from "./comment";
 
 interface BlogPostProps {
   post: Post;
@@ -26,12 +27,16 @@ export const getStaticProps: GetStaticProps<BlogPostProps> = async ({ params }) 
   };
 };
 
-export default function BlogPost({ post }: BlogPostProps) {
+const BlogPost = ({ post }: BlogPostProps) => {
   return (
     <div>
       <h1>Slug Page</h1>
       <h3>{post.title}</h3>
       <p>{post.body}</p>
+      <ul className="comments-list">
+        <Comment slug={post.slug} />
+      </ul>
     </div>
   );
-}
+};
+export default BlogPost;
