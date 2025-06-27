@@ -9,17 +9,7 @@ type Data = {
 };
 
 
-// const API_URL = "http://localhost:5000";
-
-export const getPosts = async (): Promise<Post[]> => {
-	console.log("in NEXT: api/posts/")
-	return await [{
-		"id": "1",
-		"slug": "weekend-with-david",
-		"title": "Weekend with David",
-		"body": "Dear Diary"
-	},]
-}
+const API_URL = "http://localhost:5000";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -29,10 +19,15 @@ export default async function handler(
 
 	switch (method) {
 		case 'GET':
+			// call fetch('/api/posts?var1=value'); in client component
+			// const { var1, var2, var3 } = req.query
+			// if (var1) {
+			// 	const response = await 
+			// }
 			try {
 				// Return all posts
-				const posts = await getPosts();
-
+				const response = await fetch(`${API_URL}/posts`);
+				const posts = await response.json();
 				res.status(200).json({ posts });
 			} catch (err) {
 				res.status(500).json({ error: `Failed to fetch posts ${err}` });

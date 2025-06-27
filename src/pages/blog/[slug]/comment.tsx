@@ -11,16 +11,34 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
   const [newComment, setNewComment] = useState<string>("");
   const { loggedInUser } = useUser();
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      const res = await fetch(`http://localhost:5000/comments?slug=${slug}`).then((res) =>
-        res.json()
-      );
-      setComments(res);
-    };
+  // useEffect(() => {
+  //   const fetchComments = async () => {
+  //     const res = await fetch(`http://localhost:5000/comments?slug=${slug}`).then((res) =>
+  //       res.json()
+  //     );
+  //     setComments(res);
+  //   };
+  //   fetchComments();
+  //   console.log("Comments component mounted");
+  // }, [slug]);
+
+useEffect(() => {
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`/api/comments?slug=${slug}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setComments(data.comments || []);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
     fetchComments();
-    console.log("Comments component mounted");
-  }, [slug]);
+}, [slug]);
+
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
