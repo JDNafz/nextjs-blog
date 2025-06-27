@@ -20,30 +20,6 @@
     }
   ],
   "users": [
-    {
-      "id": "alibby",
-      "name": "Alex",
-      "email": "alexrules@gmail.com",
-      "password": "alex"
-    },
-    {
-      "id": "2",
-      "name": "David",
-      "email": "davidrules@gmail.com",
-      "password": "david"
-    },
-    {
-      "id": "3",
-      "name": "Julian",
-      "email": "juju@gmail.com",
-      "password": "julian"
-    },
-    {
-      "id": "4",
-      "name": "Anthony",
-      "email": "anthony@gmail.com",
-      "password": "anthony"
-    }
   ],
   "comments": [
     {
