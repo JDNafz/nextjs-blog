@@ -8,7 +8,7 @@ export default function BlogPage() {
     <>
       <section className="blog">
         <Link href="/">← Back to Home</Link>
-        <h1> This is the Blog Page </h1>
+        <h1> Blog Posts </h1>
         <ul>
           {posts.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`}>
