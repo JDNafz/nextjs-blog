@@ -1,29 +1,36 @@
-import {
-  createContext,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { User } from "@/lib/interfaces/User";
 
 interface UserContextType {
   loggedInUser: User | null;
-  setLoggedInUser: React.Dispatch<SetStateAction<User | null>>;
+  // setLoggedInUser: React.Dispatch<SetStateAction<User | null>>;
+  setLoggedInUser: (u: User | null) => void;
 }
 
-export const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType | null>(null);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-
+  useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
+    if (storedUser) {
+      setLoggedInUser(JSON.parse(storedUser));
+    }
+  }, []);
   return (
     <UserContext.Provider
       value={{
-        loggedInUser,
-        setLoggedInUser,
+        loggedInUser: loggedInUser,
+        setLoggedInUser: (u: User | null) => {
+          //stays
+          if (u !== null) {
+            localStorage.setItem("user", JSON.stringify(u));
+          } else {
+						//upon logout remove user from 
+            localStorage.removeItem("user");
+          }
+          setLoggedInUser(u);
+        },
       }}
     >
       {children}

@@ -11,6 +11,7 @@ const Comment: React.FC<CommentProps> = ({ slug }) => {
   const [newComment, setNewComment] = useState<string>("");
   const { loggedInUser } = useUser();
 
+	
 useEffect(() => {
   const fetchComments = async () => {
     try {
