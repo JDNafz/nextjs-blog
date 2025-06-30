@@ -24,7 +24,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setLoggedInUser: (u: User | null) => {
           //stays
           if (u !== null) {
-            localStorage.setItem("user", JSON.stringify(u));
+            localStorage.setItem("loggedInUser", JSON.stringify(u));
           } else {
 						//upon logout remove user from 
             localStorage.removeItem("user");
