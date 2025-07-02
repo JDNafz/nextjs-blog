@@ -7,6 +7,8 @@ interface UserContextType {
   setLoggedInUser: (u: User | null) => void;
 }
 
+//TODO: refactor to use sessions to manage loggedInUser across refresh
+
 const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

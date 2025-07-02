@@ -1,15 +1,14 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Post } from "@/lib/interfaces/PostInterface";
+import { createPost, getAllPosts, getPostBySlug } from "@/lib/repositories/postRepository";
 
 type Data = {
 	posts?: Post[];
 	message?: string;
 	error?: string;
+	post?: Post
 };
-
-
-const API_URL = "http://localhost:5000";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -20,28 +19,42 @@ export default async function handler(
 	switch (method) {
 		case 'GET':
 			// call fetch('/api/posts?var1=value'); in client component
-			// const { var1, var2, var3 } = req.query
-			// if (var1) {
-			// 	const response = await 
-			// }
 			try {
+				//Get Post by Slug
+				const { slug } = req.query
+				if (typeof slug === 'string') {
+					const post = await getPostBySlug(slug);
+					res.status(200).json({ post })
+					break;
+				} else {
+					res.status(400).json({ error: 'Invalid slug' })
+					break;
+				}
 				// Return all posts
-				const response = await fetch(`${API_URL}/posts`);
-				const posts = await response.json();
+				const response = await getAllPosts();
+				const posts = await response;
 				res.status(200).json({ posts });
 			} catch (err) {
 				res.status(500).json({ error: `Failed to fetch posts ${err}` });
 			}
 			break;
-
 		case 'POST':
-			// TODO: Handle creating a new post
-			// const { title, slug, body } = req.body;
-			// Validate required fields
-			// Add new post to data source
-			// Return created post
-			res.status(501).json({ error: 'POST method not implemented yet' });
-			break;
+			try {
+
+				// Validate required fields
+				const newPost: Omit<Post, "id"> = req.body;
+				const response = await createPost(newPost)
+				if (!response) {
+					throw new Error("Failure making post");
+				}
+				res.status(201).json({ posts: [response] })
+			} catch (err) {
+				res.status(501).json({ error: "Failure making post" + err });
+				break;
+
+			}
+
+
 
 		case 'PUT':
 			// TODO: Handle updating an existing post

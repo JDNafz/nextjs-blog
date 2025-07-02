@@ -1,7 +1,7 @@
 import { useUser } from "@/context/UserProvider";
 import { User } from "@/lib/interfaces/User";
 import { useState } from "react";
-import myCSS from "../styles/Home.module.css";
+import myCSS from "../../styles/Home.module.css"
 import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
