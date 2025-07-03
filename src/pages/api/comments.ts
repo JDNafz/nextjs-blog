@@ -4,16 +4,22 @@ import { createComment, getCommentsByPostId } from "@/lib/repositories/commentsR
 import type { NextApiRequest, NextApiResponse } from "next";
 
 
-type Data = {
-	data?: Comment | Comment[];
+type CommentResponse = {
+	data?: Comment
+	message?: string;
+	error?: string;
+};
+type CommentListResponse = {
+	data?: Comment[]
 	message?: string;
 	error?: string;
 };
 
 
+
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<Data>,
+	res: NextApiResponse<CommentResponse | CommentListResponse>,
 ) {
 	const { method, query } = req;
 
