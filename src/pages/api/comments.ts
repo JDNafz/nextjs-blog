@@ -24,7 +24,7 @@ export default async function handler(
 				if (typeof post_id === 'string') {
 					const postId = parseInt(post_id);
 					const comments = await getCommentsByPostId(postId);
-					res.status(200).json({ comments });
+					res.status(200).json({ data: comments });
 				} else {
 					res.status(400).json({ error: 'query error in /api/comments' })
 				}

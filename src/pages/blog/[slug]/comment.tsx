@@ -18,12 +18,13 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await fetch(`/api/comments?post_id=${postId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const res = await fetch(`/api/comments?post_id=${postId}`);
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
-        const data = await response.json();
-        setComments(data.comments || []);
+        const payload = await res.json();
+				const comments = payload.data;
+        setComments(comments || []);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
