@@ -6,14 +6,13 @@ import { query } from "./pgHelper";
 
 // GET BlogPost
 export const getAllPosts = async (): Promise<Omit<Post, "password">[]> => {
-	const { rows } = await query<Post>('SELECT * FROM blog_posts');
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { rows } = await query<Post>('SELECT * FROM post');
 	return rows
 }
 
 // Get BlogPost by Slug
 export const getPostBySlug = async (slug: string): Promise<Post> => {
-	const { rows } = await query<Post>('SELECT * FROM Posts WHERE slug = $1', [slug]);
+	const { rows } = await query<Post>('SELECT * FROM post WHERE slug = $1', [slug]);
 	return rows[0];
 }
 
@@ -21,7 +20,7 @@ export const getPostBySlug = async (slug: string): Promise<Post> => {
 // GET Post by Email
 export const getPostByUserId = async (id: number): Promise<Post | null> => {
 	const { rows } = await query<Post>(
-		`SELECT * FROM blog_posts WHERE author_id = $1`,
+		`SELECT * FROM post WHERE author_id = $1`,
 		[id]
 	);
 

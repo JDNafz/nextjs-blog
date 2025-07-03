@@ -1,54 +1,59 @@
 import { useUser } from "@/context/UserProvider";
-import { BlogComment } from "@/lib/interfaces/Comment";
+import { Comment } from "@/lib/interfaces/Comment";
 import React, { useEffect, useState } from "react";
 
 interface CommentProps {
-  slug: string;
+  postId: number;
+}
+interface CommentDisplay extends Comment {
+  author: string;
 }
 
-const Comment: React.FC<CommentProps> = ({ slug }) => {
-  const [comments, setComments] = useState<BlogComment[]>([]);
+const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
+  const [comments, setComments] = useState<CommentDisplay[]>([]);
   const [newComment, setNewComment] = useState<string>("");
   const { loggedInUser } = useUser();
 
-	
-useEffect(() => {
-  const fetchComments = async () => {
-    try {
-      const response = await fetch(`/api/comments?slug=${slug}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`/api/comments?post_id=${postId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setComments(data.comments || []);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
       }
-      const data = await response.json();
-      setComments(data.comments || []);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-    }
-  };
+    };
     fetchComments();
-}, [slug]);
-
-
+  }, [postId]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loggedInUser === null) {
+      alert("Must be logged in to Comment");
+    } else {
 
-    const commentSubmission: Omit<BlogComment, "id"> = {
-      slug: slug,
-      userId: loggedInUser ? loggedInUser.id : "anonymous",
-      author: loggedInUser ? loggedInUser.name : "anonymous",
-      content: newComment,
-      timestamp: new Date().toISOString(),
-    };
-    const res = await fetch(`http://localhost:5000/comments`, {
-      method: "POST",
-      body: JSON.stringify(commentSubmission),
-    });
-    if (!res.ok) {
-      throw new Error(`Error POST comment`);
+      const commentSubmission: Omit<Comment, "id"> = {
+        postId: postId,
+        authorId: loggedInUser.id,
+        content: newComment,
+        createdAt: new Date().toISOString(),
+      };
+			console.log(loggedInUser);
+      const res = await fetch(`/api/comments`, {
+        method: "POST",
+        body: JSON.stringify(commentSubmission),
+      });
+      if (!res.ok) {
+        throw new Error(`Error in /api/comments ~ POST`);
+      }
+      const resComment: CommentDisplay = await res.json();
+      const displayComment = { ...resComment, author: loggedInUser.name };
+      setComments((prev) => [...prev, displayComment]);
     }
-    const resComment: BlogComment = await res.json();
-    setComments((prev) => [...prev, resComment]);
   };
 
   return (
@@ -58,8 +63,8 @@ useEffect(() => {
         {loggedInUser && `Logged in as ${loggedInUser?.name}`}
 
         <textarea
-          disabled={ loggedInUser ? false: true}
-					placeholder={ loggedInUser ? "" : "Please login to comment."}
+          disabled={loggedInUser ? false : true}
+          placeholder={loggedInUser ? "" : "Please login to comment."}
           rows={4}
           cols={60}
           onChange={(e) => setNewComment(e.target.value)}
@@ -82,4 +87,4 @@ useEffect(() => {
   );
 };
 
-export default Comment;
+export default CommentComponent;

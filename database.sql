@@ -1,8 +1,8 @@
 -- Drop tables if they already exist (in reverse dependency order)
-DROP TABLE IF EXISTS comments,blog_posts,users;
+DROP TABLE IF EXISTS comment, post,user;
 
--- Users Table
-CREATE TABLE users (
+-- User Table
+CREATE TABLE user (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -10,33 +10,33 @@ CREATE TABLE users (
 );
 
 -- Blog Posts Table
-CREATE TABLE blog_posts (
+CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     body TEXT NOT NULL,
-    author_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    author_id INTEGER NOT NULL REFERENCES user(id) ON DELETE CASCADE
 );
 
 
--- Comments Table
-CREATE TABLE comments (
+-- Comment Table
+CREATE TABLE comment (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
-    post_id INTEGER NOT NULL REFERENCES blog_posts(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES user(id) ON DELETE SET NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 INSERT INTO
-	users (name, password, email)
+	user (name, password, email)
 VALUES
 	('JD', 'nafnaf', 'naf@naf'),
 	('GenericUser', 'user', 'user@user'),
 	('Bruce', 'bruce', 'bruce@bruce');
 
 INSERT INTO
-	blog_posts (title, slug, body, author_id)
+	post (title, slug, body, author_id)
 VALUES
 	('My title', 'my-title', 'this is the body of the post', 1),
 	('My title2', 'my-title2', '2222this is the body of the post', 1),
@@ -46,7 +46,7 @@ VALUES
 	('REST API Guide', 'rest-api-guide', 'Building REST APIs with Express.', 3);
 
 INSERT INTO
-	comments (content, post_id, user_id)
+	comment (content, post_id, user_id)
 VALUES
 	('Great post!', 1, 2),
 	('Thanks for sharing!', 1, 3),

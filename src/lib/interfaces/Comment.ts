@@ -1,8 +1,9 @@
-export interface BlogComment {
-	id: string,
-	slug: string,
-	userId?: string,
-	author?: string,
-	content: string,
-	timestamp: string, //Date ISO string
+
+export interface Comment {
+	id: number;
+	authorId: number;
+	postId: number;
+	content: string;
+	createdAt: string;
+	// Add other comment properties as needed
 }

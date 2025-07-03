@@ -12,6 +12,7 @@ export async function query<T = unknown>(
   params?: unknown[]
 ): Promise<{ rows: T[] }> {
   const result = await pool.query(sqlCommand, params);
+	console.log("QUERY RESULT:\n ")
   return { rows: result.rows };
 }
 

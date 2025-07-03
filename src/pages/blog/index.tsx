@@ -1,11 +1,20 @@
+import { getAllPosts } from "@/lib/repositories/postRepository";
+import { Post } from "@/lib/interfaces/PostInterface";
+
 import Link from "next/link";
-import { posts } from "./static-exports";
+import Nav from "../_components/nav";
+// import { posts } from "./static-exports";
 
-export default function BlogPage() {
-  // const posts = await getPosts()
-	
+export async function getStaticProps() {
+  const posts = await getAllPosts();
+  return {
+    props: {
+      posts,
+    },
+  };
+}
 
-
+export default function BlogPage({ posts }: { posts: Post[] }) {
   return (
     <>
       <section className="blog">
@@ -19,10 +28,7 @@ export default function BlogPage() {
           ))}
         </ul>
       </section>
-      <nav>
-        <Link href="/">Home</Link> | <Link href="/about">Go to About Page</Link> |{" "}
-        <Link href="/contact">Go to Contact Page</Link>
-      </nav>
+      <Nav />
     </>
   );
 }

@@ -1,13 +1,15 @@
 import { Post } from "@/lib/interfaces/PostInterface";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Comment from "./comment";
+import { getAllPosts, getPostBySlug } from "@/lib/repositories/postRepository";
+import Nav from "@/pages/_components/
 
 interface BlogPostProps {
   post: Post;
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await fetch("http://localhost:5000/posts/").then((res) => res.json());
+  const posts = await getAllPosts();
   const paths = posts.map((post: Post) => ({
     params: { slug: post.slug },
   }));
@@ -17,10 +19,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 // do I need async ({ params } : { params: { slug: string }}) >
 export const getStaticProps: GetStaticProps<BlogPostProps> = async ({ params }) => {
   const slug = params?.slug as string;
-  // http://localhost:5000/posts?slug=weekend-with-david json-server query
 
-  const res = await fetch(`api/posts?slug=${slug}`).then((res) => res.json());
-  const post = await res[0];
+  const res = await getPostBySlug(slug);
+  const post = await res;
   return {
     props: { post },
     revalidate: 60,
@@ -34,8 +35,9 @@ const BlogPost = ({ post }: BlogPostProps) => {
       <h3>{post.title}</h3>
       <p>{post.body}</p>
       <ul className="comments-list">
-        <Comment slug={post.slug} />
+        <Comment postId={post.id} />
       </ul>
+			<Nav />
     </div>
   );
 };
