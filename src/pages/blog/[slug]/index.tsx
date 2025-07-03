@@ -2,7 +2,8 @@ import { Post } from "@/lib/interfaces/PostInterface";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Comment from "./comment";
 import { getAllPosts, getPostBySlug } from "@/lib/repositories/postRepository";
-import Nav from "@/pages/_components/
+import Nav from "@/pages/_components/Nav";
+
 
 interface BlogPostProps {
   post: Post;

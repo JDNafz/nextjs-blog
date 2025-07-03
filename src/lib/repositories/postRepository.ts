@@ -32,7 +32,7 @@ export const createPost = async (newPost: Omit<Post, "id">): Promise<Post | null
 	const title = newPost.title;
 	const slug = newPost.slug;
 	const authorId = newPost.authorId;
-	const { rows } = await query<Post>(`INSERT INTO users (title, slug, author_id)
+	const { rows } = await query<Post>(`INSERT INTO user (title, slug, author_id)
 		VALUES ($1, $2, $3)
 		RETURNING *`,
 		[title, slug, authorId]

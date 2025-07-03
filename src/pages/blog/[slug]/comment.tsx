@@ -1,6 +1,7 @@
 import { useUser } from "@/context/UserProvider";
 import { Comment } from "@/lib/interfaces/Comment";
 import React, { useEffect, useState } from "react";
+import styles from "./styles.module.css";
 
 interface CommentProps {
   postId: number;
@@ -35,14 +36,13 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
     if (loggedInUser === null) {
       alert("Must be logged in to Comment");
     } else {
-
       const commentSubmission: Omit<Comment, "id"> = {
         postId: postId,
         authorId: loggedInUser.id,
         content: newComment,
         createdAt: new Date().toISOString(),
       };
-			console.log(loggedInUser);
+      console.log(loggedInUser);
       const res = await fetch(`/api/comments`, {
         method: "POST",
         body: JSON.stringify(commentSubmission),
@@ -59,8 +59,9 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
   return (
     <div>
       <h2>Comments</h2>
-      <form onSubmit={handleSubmit}>
-        {loggedInUser && `Logged in as ${loggedInUser?.name}`}
+
+      <form className={styles.commentForm} onSubmit={handleSubmit}>
+        {loggedInUser && `Leave a comment as ${loggedInUser?.name}`}
 
         <textarea
           disabled={loggedInUser ? false : true}

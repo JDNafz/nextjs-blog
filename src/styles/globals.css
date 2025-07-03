@@ -37,6 +37,7 @@ button {
 	border: 2px solid rgb(0, 0, 0);
 	padding: .3rem .5rem;
 	margin: .3rem 0;
+	align-self: flex-start;
 }
 
 .footer {

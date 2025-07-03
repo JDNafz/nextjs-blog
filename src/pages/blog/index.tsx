@@ -2,7 +2,7 @@ import { getAllPosts } from "@/lib/repositories/postRepository";
 import { Post } from "@/lib/interfaces/PostInterface";
 
 import Link from "next/link";
-import Nav from "../_components/nav";
+import Nav from "../_components/Nav";
 // import { posts } from "./static-exports";
 
 export async function getStaticProps() {

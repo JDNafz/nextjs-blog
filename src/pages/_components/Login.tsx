@@ -1,7 +1,6 @@
 import { useUser } from "@/context/UserProvider";
-import { User } from "@/lib/interfaces/User";
 import { useState } from "react";
-import myCSS from "../../styles/Home.module.css"
+import myCSS from "../../styles/Home.module.css";
 import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
@@ -36,34 +35,31 @@ const Login: React.FC = () => {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (isReg) {
-      if (!name.trim()) {
-        setBlankError(true);
-        return;
-      }
-    }
     if (!email.trim() || !password.trim()) {
       setBlankError(true);
       return;
     }
     if (isReg) {
+      if (!name.trim()) {
+        setBlankError(true);
+        return;
+      }
       try {
-        const res1 = await fetch(`http://localhost:5000/users/?email=${email}`);
-        const foundUser = await res1.json();
-        if (foundUser.length) {
-          console.log("FOUND:", foundUser);
-          throw new Error("a user with this email already exists");
-        }
-        const newUser: Omit<User, "id"> = {
-          email: email.trim(),
-          password: password.trim(),
-          name: name.trim(),
-        };
-        const res = await fetch(`http://localhost:5000/users/`, {
-          method: "POST",
-          body: JSON.stringify(newUser),
-        });
-        const registeredUser = await res.json();
+        const res = await (
+          await fetch(`/api/users`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              action: "register",
+              email: email.trim(),
+              password: password.trim(),
+              name: name.trim(),
+            }),
+          })
+        ).json();
+        const registeredUser = res.data;
         setLoggedInUser(registeredUser);
         console.log(`${registeredUser} has been registered and logged in.`);
         router.push("/blog");
@@ -71,21 +67,28 @@ const Login: React.FC = () => {
         console.log("registration error:", err);
       }
     } else {
+      // isReg was false
       //login:
       try {
-        const res = await fetch(`http://localhost:5000/users/?email=${email}`);
-        const resArray = await res.json();
-        const foundUser = resArray[0];
-        if (!foundUser) {
-          throw new Error("No user found with that email");
-        }
-        if (foundUser.password === password) {
-          setLoggedInUser(foundUser);
-          console.log(`${foundUser[0]} has been logged in.`);
-          // router.push("/blog");
-        } else {
-          throw new Error("Incorrect username and/or password");
-        }
+        const res = await (
+          await fetch("/api/users/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              action: "login",
+              email: email.trim(),
+              password: password.trim(),
+            }),
+          })
+        ).json();
+        const returnedUser = res.data;
+        setLoggedInUser(returnedUser);
+        // reset Inputs
+        setEmail("");
+        setPassword("");
+        router.push("/blog");
       } catch (err) {
         throw new Error(`Login Error: ${err}`);
       }
