@@ -40,7 +40,7 @@ export default async function handler(
 				console.log(newComment.authorId)
 				const comment = await createComment(newComment);
 				// console.log("This one", comment, "\n")
-				res.status(200).json({data: comment })
+				res.status(200).json({ data: comment })
 				break;
 			} catch (err) {
 
