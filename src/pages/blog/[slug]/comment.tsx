@@ -36,23 +36,30 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
     if (loggedInUser === null) {
       alert("Must be logged in to Comment");
     } else {
-      const commentSubmission: Omit<Comment, "id"> = {
-        postId: postId,
-        authorId: loggedInUser.id,
-        content: newComment,
-        createdAt: new Date().toISOString(),
-      };
-      console.log(loggedInUser);
-      const res = await fetch(`/api/comments`, {
-        method: "POST",
-        body: JSON.stringify(commentSubmission),
-      });
-      if (!res.ok) {
-        throw new Error(`Error in /api/comments ~ POST`);
+      try {
+        const commentSubmission: Omit<Comment, "id"> = {
+          postId: postId,
+          authorId: loggedInUser.id,
+          content: newComment,
+          createdAt: new Date().toISOString(),
+        };
+        const res = await (
+          await fetch(`/api/comments`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(commentSubmission),
+          })
+        ).json();
+        const resComment: CommentDisplay = res.data;
+
+        const displayComment = { ...resComment, author: loggedInUser.name };
+
+        setComments((prev) => [...prev, displayComment]);
+      } catch (err) {
+        throw new Error("Error Posting comment: " + err);
       }
-      const resComment: CommentDisplay = await res.json();
-      const displayComment = { ...resComment, author: loggedInUser.name };
-      setComments((prev) => [...prev, displayComment]);
     }
   };
 

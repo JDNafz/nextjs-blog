@@ -5,8 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 
 type Data = {
-	comment?: Comment;
-	comments?: Comment[];
+	data?: Comment | Comment[];
 	message?: string;
 	error?: string;
 };
@@ -40,7 +39,8 @@ export default async function handler(
 				const newComment = req.body;
 				console.log(newComment.authorId)
 				const comment = await createComment(newComment);
-				res.status(200).json({ comment })
+				// console.log("This one", comment, "\n")
+				res.status(200).json({data: comment })
 				break;
 			} catch (err) {
 
