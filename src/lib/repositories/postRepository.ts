@@ -29,13 +29,12 @@ export const getPostByUserId = async (id: number): Promise<Post | null> => {
 
 // Post BlogPost
 export const createPost = async (newPost: Omit<Post, "id">): Promise<Post | null> => {
-	const title = newPost.title;
-	const slug = newPost.slug;
-	const authorId = newPost.authorId;
-	const { rows } = await query<Post>(`INSERT INTO user (title, slug, author_id)
-		VALUES ($1, $2, $3)
+	const { title, slug, body, authorId } = newPost;
+	console.log("QUERY INSERT into:", newPost);
+	const { rows } = await query<Post>(`INSERT INTO post (title, slug, body, author_id)
+		VALUES ($1, $2, $3, $4)
 		RETURNING *`,
-		[title, slug, authorId]
+		[title, slug, body, authorId]
 
 	)
 	return rows[0];

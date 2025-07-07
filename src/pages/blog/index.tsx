@@ -19,8 +19,9 @@ export default function BlogPage({ posts }: { posts: Post[] }) {
     <>
       <section className="blog">
         <Link href="/">← Back to Home</Link>
+				<Link href="/blog/create">Create a new Post</Link>
         <h1> Blog Posts </h1>
-        <ul>
+        <ul className="post-list">
           {posts.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`}>
               <h3>{post.title}</h3>
@@ -28,6 +29,7 @@ export default function BlogPage({ posts }: { posts: Post[] }) {
           ))}
         </ul>
       </section>
+
       <Nav />
     </>
   );
