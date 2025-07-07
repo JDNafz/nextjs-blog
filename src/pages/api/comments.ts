@@ -27,67 +27,61 @@ const formatCommentsFromDb = (dbComments: CommentFromDb[]): Comment[] => {
 	})
 }
 
-// const getComments = async (query: Partial<{
-//     [key: string]: string | string[];}>) => {
-// 	try {
-// 		const { post_id } = query;
-// 		if (typeof post_id === 'string') { // narrowing query format
-// 			const postId = parseInt(post_id);
+const GETComments = async (
+	req: NextApiRequest,
+	res: NextApiResponse<CommentResponse | CommentListResponse>
+) => {
+	try {
+		const { post_id } = req.query;
+		if (typeof post_id === 'string') { // narrowing query format
+			const postId = parseInt(post_id);
 
-// 			const dbComments = await getCommentsByPostId(postId);
-// 			const comments = formatCommentsFromDb(dbComments);
-// 			return comments
-// 			res.status(200).json({ data: comments });
-// 		} else {
-// 			res.status(400).json({ error: 'query error in /api/comments' })
-// 		}
-// 	} catch (error) {
-// 		console.error('Error fetching comments:', error);
-// 		res.status(500).json({ error: 'Failed to fetch comments' });
-// 	}
-// }
+			const dbComments = await getCommentsByPostId(postId);
+			const comments = formatCommentsFromDb(dbComments);
+
+			res.status(200).json({ data: comments });
+		} else {
+			res.status(400).json({ error: 'query error in /api/comments' })
+		}
+	} catch (error) {
+		console.error('Error fetching comments:', error);
+		res.status(500).json({ error: 'Failed to fetch comments' });
+	}
+}
+
+const POSTcomment = async (
+	req: NextApiRequest,
+	res: NextApiResponse<CommentResponse | CommentListResponse>
+) => {
+	try {
+		const newComment = req.body;
+		console.log(newComment.authorId)
+		const dbComment = await createComment(newComment);
+		const [comment] = formatCommentsFromDb([dbComment])
+		// console.log("/api/comments --> 'POST': success. Returning the comment: \n", comment, "\n")
+		res.status(200).json({ data: comment })
+	} catch (err) {
+		res.status(400).json({ error: 'Failed to post comment, Error:' + err });
+	}
+}
 
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<CommentResponse | CommentListResponse>,
-) {
-	const { method, query } = req;
+	res: NextApiResponse<CommentResponse | CommentListResponse>) {
+	const { method } = req;
 
 	switch (method) {
 		case 'GET':
-			try {
-				const { post_id } = query;
-				if (typeof post_id === 'string') {
-					const postId = parseInt(post_id);
-					const comments = await getCommentsByPostId(postId);
-					res.status(200).json({ data: comments });
-				} else {
-					res.status(400).json({ error: 'query error in /api/comments' })
-				}
-			} catch (error) {
-				console.error('Error fetching comments:', error);
-				res.status(500).json({ error: 'Failed to fetch comments' });
-			}
+			await GETComments(req, res);
 			break;
 
 		case 'POST':
-			try {
-				const newComment = req.body;
-				console.log(newComment.authorId)
-				const dbComment = await createComment(newComment);
-				const [comment] = formatCommentsFromDb([dbComment])
-				console.log("/api/comments --> 'POST' This is the comment returned from the DB:\n", comment, "\n")
-				res.status(200).json({ data: comment })
-				break;
-			} catch (err) {
-
-				res.status(400).json({ error: 'Failed to post comment, Error:' + err });
-				break;
-			}
+			await POSTcomment(req, res);
+			break;
 
 		default:
-			console.error("Ya hit the DEFAULT CASE");
+			// console.error("Ya hit the DEFAULT CASE");
 			res.setHeader('Allow', ['GET', 'POST']);
 			res.status(405).json({ error: `Method ${method} not allowed` });
 			break;

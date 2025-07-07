@@ -25,7 +25,6 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
         const payload = await res.json();
         const comments = payload.data;
         setComments(comments || []);
-        console.log(comments.reverse());
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
