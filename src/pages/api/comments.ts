@@ -37,8 +37,8 @@ const GETComments = async (
 			const postId = parseInt(post_id);
 
 			const dbComments = await getCommentsByPostId(postId);
-			const comments = formatCommentsFromDb(dbComments);
-
+			const unOrderedComments = formatCommentsFromDb(dbComments);
+			const comments = unOrderedComments.sort((a,b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 			res.status(200).json({ data: comments });
 		} else {
 			res.status(400).json({ error: 'query error in /api/comments' })
