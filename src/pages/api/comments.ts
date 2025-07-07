@@ -1,5 +1,5 @@
 
-import { Comment } from "@/lib/interfaces/Comment";
+import { Comment, CommentFromDb } from "@/lib/interfaces/Comment";
 import { createComment, getCommentsByPostId } from "@/lib/repositories/commentsRepository";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -15,6 +15,37 @@ type CommentListResponse = {
 	error?: string;
 };
 
+const formatCommentsFromDb = (dbComments: CommentFromDb[]): Comment[] => {
+	return dbComments.map((comment) => {
+		const { user_id: authorId, post_id: postId, created_at: createdAt, ...rest } = comment;
+		return {
+			...rest,
+			authorId,
+			postId,
+			createdAt
+		}
+	})
+}
+
+// const getComments = async (query: Partial<{
+//     [key: string]: string | string[];}>) => {
+// 	try {
+// 		const { post_id } = query;
+// 		if (typeof post_id === 'string') { // narrowing query format
+// 			const postId = parseInt(post_id);
+
+// 			const dbComments = await getCommentsByPostId(postId);
+// 			const comments = formatCommentsFromDb(dbComments);
+// 			return comments
+// 			res.status(200).json({ data: comments });
+// 		} else {
+// 			res.status(400).json({ error: 'query error in /api/comments' })
+// 		}
+// 	} catch (error) {
+// 		console.error('Error fetching comments:', error);
+// 		res.status(500).json({ error: 'Failed to fetch comments' });
+// 	}
+// }
 
 
 export default async function handler(
@@ -44,8 +75,9 @@ export default async function handler(
 			try {
 				const newComment = req.body;
 				console.log(newComment.authorId)
-				const comment = await createComment(newComment);
-				// console.log("This one", comment, "\n")
+				const dbComment = await createComment(newComment);
+				const [comment] = formatCommentsFromDb([dbComment])
+				console.log("/api/comments --> 'POST' This is the comment returned from the DB:\n", comment, "\n")
 				res.status(200).json({ data: comment })
 				break;
 			} catch (err) {

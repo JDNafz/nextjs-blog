@@ -1,7 +1,7 @@
 import { useUser } from "@/context/UserProvider";
 import { Comment } from "@/lib/interfaces/Comment";
 import React, { useEffect, useState } from "react";
-import styles from "./styles.module.css";
+import styles from "../styles.module.css";
 
 interface CommentProps {
   postId: number;
@@ -23,8 +23,9 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
         const payload = await res.json();
-				const comments = payload.data;
+        const comments = payload.data;
         setComments(comments || []);
+        console.log(comments.reverse());
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -36,31 +37,35 @@ const CommentComponent: React.FC<CommentProps> = ({ postId }) => {
     e.preventDefault();
     if (loggedInUser === null) {
       alert("Must be logged in to Comment");
-    } else {
-      try {
-        const commentSubmission: Omit<Comment, "id"> = {
-          postId: postId,
-          authorId: loggedInUser.id,
-          content: newComment,
-          createdAt: new Date().toISOString(),
-        };
-        const res = await (
-          await fetch(`/api/comments`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(commentSubmission),
-          })
-        ).json();
-        const resComment: CommentDisplay = res.data;
+      return;
+    }
+		if (newComment === ""){
+			//apply css to indicate it was blank //TODO
+			return;
+		}
+    try {
+      const commentSubmission: Omit<Comment, "id"> = {
+        postId: postId,
+        authorId: loggedInUser.id,
+        content: newComment,
+        createdAt: new Date().toISOString(),
+      };
+      const res = await (
+        await fetch(`/api/comments`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(commentSubmission),
+        })
+      ).json();
+      const resComment: CommentDisplay = res.data;
 
-        const displayComment = { ...resComment, author: loggedInUser.name };
+      const displayComment = { ...resComment, author: loggedInUser.name };
 
-        setComments((prev) => [...prev, displayComment]);
-      } catch (err) {
-        throw new Error("Error Posting comment: " + err);
-      }
+      setComments((prev) => [...prev, displayComment]);
+    } catch (err) {
+      throw new Error("Error Posting comment: " + err);
     }
   };
 
